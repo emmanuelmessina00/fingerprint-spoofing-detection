@@ -3,10 +3,11 @@ import numpy as np
 from sklearn.datasets import load_iris
 import matplotlib.pyplot as plt
 import scipy
-from plots import vRow,getC,getMu,init
-from logpdf_GAU_ND import logpdf_GAU_ND
-from lda import compute_Sb_Sw,split_db_2to1
-from pca import PCA
+
+from scripts.utils import *
+from scripts.logpdf_GAU_ND import *
+
+
 def get_params_MVG(DTR,LTR):
 
     params=[]
@@ -114,77 +115,4 @@ def compute_correlations(params, labels):
         print(f"Correlation Matrix:\n{Corr}\n")
 
 if __name__ == "__main__":
-    D, L, labels = init()
-    (DTR, LTR), (DVAL, LVAL) = split_db_2to1(D, L)
-
-    print("\n" + "="*70)
-    print("CLASSIFICATION WITH ALL 6 FEATURES")
-    print("="*70)
-    
-    MVG_Classifier(DTR, LTR, DVAL, LVAL)
-    Naive_Bayes_Classifier(DTR, LTR, DVAL, LVAL)
-    Tied_Covariance_Classifier(DTR, LTR, DVAL, LVAL)
-
-    # Correlation analysis
-    print("\n" + "="*70)
-    print("CORRELATION ANALYSIS - ALL 6 FEATURES")
-    print("="*70)
-    params = get_params_MVG(DTR, LTR)
-    compute_correlations(params, labels)
-
-    # Feature subset 0-3 (Features 1-4)
-    print("\n" + "="*70)
-    print("CLASSIFICATION WITH FEATURES 0-3 (Features 1-4)")
-    print("="*70)
-    
-    DTR_sliced = DTR[0:4, :]
-    DVAL_sliced = DVAL[0:4, :]
-    
-    MVG_Classifier(DTR_sliced, LTR, DVAL_sliced, LVAL)
-    Naive_Bayes_Classifier(DTR_sliced, LTR, DVAL_sliced, LVAL)
-    Tied_Covariance_Classifier(DTR_sliced, LTR, DVAL_sliced, LVAL)
-
-    # Feature pair 0-1 (Features 1-2)
-    print("\n" + "="*70)
-    print("CLASSIFICATION WITH FEATURES 0-1 (Features 1-2)")
-    print("="*70)
-    print("Characteristics: Similar means, Different variances")
-    print("="*70)
-    
-    DTR_sliced01 = DTR[0:2, :]
-    DVAL_sliced01 = DVAL[0:2, :]
-    
-    MVG_Classifier(DTR_sliced01, LTR, DVAL_sliced01, LVAL)
-    Naive_Bayes_Classifier(DTR_sliced01, LTR, DVAL_sliced01, LVAL)
-    Tied_Covariance_Classifier(DTR_sliced01, LTR, DVAL_sliced01, LVAL)
-
-    # Feature pair 2-3 (Features 3-4)
-    print("\n" + "="*70)
-    print("CLASSIFICATION WITH FEATURES 2-3 (Features 3-4)")
-    print("="*70)
-    print("Characteristics: Different means, Similar variances")
-    print("="*70)
-    
-    DTR_sliced23 = DTR[2:4, :]
-    DVAL_sliced23 = DVAL[2:4, :]
-    
-    MVG_Classifier(DTR_sliced23, LTR, DVAL_sliced23, LVAL)
-    Naive_Bayes_Classifier(DTR_sliced23, LTR, DVAL_sliced23, LVAL)
-    Tied_Covariance_Classifier(DTR_sliced23, LTR, DVAL_sliced23, LVAL)
-
-    # PCA preprocessing with all 3 classifiers
-    print("\n" + "="*70)
-    print("CLASSIFICATION WITH PCA PREPROCESSING")
-    print("="*70)
-    
-    for m in [1, 2, 3, 4, 5, 6]:
-        print(f"\n--- m = {m} ---")
-        
-        # Apply PCA
-        U, DTR_pca = PCA(DTR, m)
-        DVAL_pca = np.dot(U.T, DVAL)
-        
-        # Apply all three classifiers
-        MVG_Classifier(DTR_pca, LTR, DVAL_pca, LVAL)
-        Naive_Bayes_Classifier(DTR_pca, LTR, DVAL_pca, LVAL)
-        Tied_Covariance_Classifier(DTR_pca, LTR, DVAL_pca, LVAL)
+    pass

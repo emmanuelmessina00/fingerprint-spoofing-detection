@@ -1,27 +1,7 @@
-from lda import split_db_2to1
-from plots import init
-from gaussianclass import (
-    MVG_Classifier,
-    getS,
-    get_params_MVG,
-    get_params_Naive_Bayes,
-    get_params_Tied_Covariance,
-    getS_Tied_Covariance,
-)
 import numpy as np
 import matplotlib.pyplot as plt
-
-def get_confusion_mat(predictions,L):
-    labels=np.unique(L)
-    M=np.zeros((len(labels),len(labels)))
-
-    predictions_int = np.array(predictions).astype(int)
-    L_int = np.array(L).astype(int)
-
-    for i in range(len(predictions_int)):
-        M[predictions_int[i]][L_int[i]]+=1
-    
-    return M
+from scripts.utils import *
+from scripts.gaussianclassifiers import *
 
 def DCF_u(predictions,L,prior,Cfn,Cfp):
     C=np.array([[0,Cfn],[Cfp,0]])
@@ -142,21 +122,4 @@ def plot_bayes_error(models, LVAL):
 
 
 if __name__ == "__main__":
-    D, L, labels = init()
-    (DTR, LTR), (DVAL, LVAL) = split_db_2to1(D, L)
-
-    print_section("1) BASELINE CLASSIFICATION (MVG)")
-    predictions_mvg = MVG_Classifier(DTR, LTR, DVAL, LVAL)
-
-    print_section("2) DCF SU APPLICAZIONI (pi1, Cfn, Cfp)")
-    run_application_table(predictions_mvg, LVAL)
-
-    print_section("3) CALCOLO LLR DEI MODELLI")
-    models = compute_model_llrs(DTR, LTR, DVAL)
-    print("LLR pronti per: " + ", ".join(models.keys()))
-
-    print_section("4) CONFRONTO actualDCF vs minDCF")
-    run_effective_prior_table(models, LVAL)
-
-    print_section("5) BAYES ERROR PLOT")
-    plot_bayes_error(models, LVAL)
+    pass
