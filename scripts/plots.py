@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
+from scripts.dcf import *
 def getHist(D,L,classes):
     n_features = D.shape[0]  # numero effettivo di feature
     for i in range(n_features):
@@ -37,5 +37,34 @@ def getScatters(D,classes, L):
             plt.legend()
             plt.show() 
 
+def plot_bayes_error(models, LVAL):
+    effPriorLogOdds = np.linspace(-4, 4, 21)
+    plt.figure(figsize=(10, 7))
+
+    for model_name, model_llr in models.items():
+        dcf = []
+        mindcf = []
+        for p in effPriorLogOdds:
+            pi = 1 / (1 + np.exp(-p))
+            predictions = get_bayes_decision(model_llr, pi, 1, 1)
+            dcf.append(DCF_norm(predictions, LVAL, pi, 1, 1))
+            mindcf.append(compute_min_dcf(model_llr, LVAL, pi, 1, 1))
+
+        line = plt.plot(effPriorLogOdds, dcf, label=f"DCF {model_name}")
+        plt.plot(
+            effPriorLogOdds,
+            mindcf,
+            label=f"min DCF {model_name}",
+            color=line[0].get_color(),
+            linestyle="--",
+        )
+
+    plt.ylim([0, 1.1])
+    plt.xlim([-4, 4])
+    plt.xlabel("prior log-odds")
+    plt.ylabel("DCF value")
+    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.tight_layout()
+    plt.show()
 if __name__ =="__main__":
     pass
